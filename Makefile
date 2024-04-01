@@ -6,7 +6,7 @@
 #    By: yessemna <yessemna@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/30 18:09:58 by yessemna          #+#    #+#              #
-#    Updated: 2024/03/31 00:43:35 by yessemna         ###   ########.fr        #
+#    Updated: 2024/04/01 00:07:24 by yessemna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,8 @@ CFLAGS = -Wall -Wextra -Werror
 SRC = philo.c \
 		utils/error.c \
 		utils/parssing.c \
+		utils/init.c \
+		utils/handle_err.c \
 		utils/ft_putstr_fd.c \
 
 OBJ = $(SRC:.c=.o)

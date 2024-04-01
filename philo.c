@@ -6,7 +6,7 @@
 /*   By: yessemna <yessemna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 01:32:19 by yessemna          #+#    #+#             */
-/*   Updated: 2024/03/31 00:42:17 by yessemna         ###   ########.fr       */
+/*   Updated: 2024/03/31 23:57:03 by yessemna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,17 @@
 			->  200 — The time it takes a philosopher to sleep
 			->  7 — Number of times all the philosophers need to eat before terminating the program **
 */
+
 int main(int ac, char const *av[])
 {
 	t_data data;
 	
     if (ac == 5 || ac == 6)
     {
+		// Parssing
 			parsing(&data, av);
+		// Init vars
+			init(&data);
     }else
         error("Error: Wrong number of arguments");
     return 0;
