@@ -6,7 +6,7 @@
 /*   By: yessemna <yessemna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 01:32:15 by yessemna          #+#    #+#             */
-/*   Updated: 2024/04/01 00:50:11 by yessemna         ###   ########.fr       */
+/*   Updated: 2024/06/24 18:38:02 by yessemna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,62 +19,63 @@
 # include <stdlib.h>
 # include <limits.h>
 # include <stdbool.h>
+# include <time.h>
+# include <sys/time.h>
 
-typedef struct s_data t_data;
-
-typedef struct s_fork
-{
-    pthread_mutex_t	fork;
-    int             fork_id;
-}					t_fork;
+typedef struct s_monitor t_monitor;
 
 typedef struct s_philo
 {
-    int         id;
-    int         meals_count;
-    bool        full;
-    long		last_meal_time;
-    t_fork      *left_fork;
-    t_fork      *right_fork;
-    pthread_t   thread_id;
-    t_data      *data;
+	pthread_mutex_t	meal_mutex;
+	pthread_t		th;
+	int				id;
+	long			start;
+	size_t			time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	size_t			last_meal;
+	int				num_eat;
+	t_monitor			*mtr;
+	int				must_eat_count;
 }					t_philo;
 
-typedef struct s_data
+typedef struct s_monitor
 {
-    int				philo_count;
-    int				time_to_die;
-    int				time_to_eat;
-    int				time_to_sleep;
-    int				must_eat_count;
-    int				start_sim;
-    bool				end_sim;
-    t_fork          *forks;
-    t_philo	        *philos;
-}					t_data;
+	pthread_mutex_t	print_mutex;
 
-typedef enum e_mutex
-{
-    INIT,
-    DESTROY,
-    LOCK,
-    UNLOCK,
-    CREATE,
-    JOIN
-}   t_state;
+	pthread_mutex_t	last_meal_mutex;
+	pthread_mutex_t	num_eat_mutex;
+	pthread_mutex_t	*forks;
+	pthread_t		thread_monitor;
+	t_philo			**philo;
+	int				philo_num;
+	int				stop_eat;
+	int				nbr_each_philo;
+	int				philo_ready;
+}   				t_monitor; 
 
 
+int		ft_atoi(const char *str);
+int		parsing(char *av[]);
 void	ft_putstr_fd(char *s, int fd);
-void	ft_putnbr_fd(int n, int fd);
-void	ft_putchar_fd(char c, int fd);
-void	error(char *str);
-void	parsing(t_data *data, char const *av[]);
-// -->  init
-void	init(t_data *data);
-void	*allocate(size_t bytes);
-void	handle_mutex(pthread_mutex_t *mutex, t_state state);
-void	handle_threads(pthread_t *thread, void *(*func)(void *), void *data, t_state state);
-// ----------
 
+// init
+int		init_monitor(t_monitor **mtr, char **av);
+int		init_mutexes(t_monitor **mtr);
+int		init_philos(t_monitor **mtr, char **av);
+
+// time
+size_t	ft_get_current_time(void);
+void	ft_usleep(size_t milliseconds);
+
+// actions
+void ft_eat(t_philo *philo);
+void ft_sleep(t_philo *philo);
+void ft_think(t_philo *philo);
+void ft_status(t_philo *philo, char *status);
+int create_philo(t_monitor **mtr);
+
+// routine
+void *routine(void *arg);
 
 #endif

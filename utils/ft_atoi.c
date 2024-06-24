@@ -6,7 +6,7 @@
 /*   By: yessemna <yessemna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 21:19:32 by yessemna          #+#    #+#             */
-/*   Updated: 2024/03/30 20:23:10 by yessemna         ###   ########.fr       */
+/*   Updated: 2024/06/22 22:18:57 by yessemna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,18 @@ int	ft_atoi(const char *str)
 	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
 		i++;
 	check_sign(str, &i, &sign);
+	if (!str[i])
+		return (-1);
+	if (str[i] && !(str[i] >= '0' && str[i] <= '9'))
+		return (-1);
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		nbr = (nbr * 10) + (str[i] - 48);
-		if (nbr > LONG_MAX)
-		{
-			if (sign == -1)
-				return (-1);
-			return (0);
-		}
+		if ((nbr * sign) > INT_MAX || (nbr * sign) < INT_MIN)
+			return (-1);
 		i++;
 	}
+	if (str[i] && !(str[i] >= '0' && str[i] <= '9'))
+		return (-1);
 	return (nbr * sign);
 }

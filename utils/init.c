@@ -6,58 +6,104 @@
 /*   By: yessemna <yessemna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 23:56:28 by yessemna          #+#    #+#             */
-/*   Updated: 2024/04/01 00:46:57 by yessemna         ###   ########.fr       */
+/*   Updated: 2024/06/24 18:41:02 by yessemna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-void    assign_fork(t_philo *philo, t_fork *forks, int phoilo_pos)
-{
-    int philo_nbr;
-    
-    philo_nbr = philo->data->philo_count;
-
-    philo->right_fork = &forks[((phoilo_pos + 1) % philo_nbr)];
-    philo->left_fork = &forks[phoilo_pos];
-    if (philo->id % 2 == 0)
-    {
-        philo->right_fork = &forks[phoilo_pos];
-        philo->left_fork = &forks[((phoilo_pos + 1) % philo_nbr)];
-    }
-}
-
-void    init_philo(t_data *data)
-{
-    int i;
-    t_philo *philo;
-
-    i = -1;
-    while (++i < data->philo_count)
-    {
-        philo = data->philos + i;
-        philo->id = i + 1;
-        philo->full = false;
-        philo->meals_count = 0;
-        philo->data = data;
-        assign_fork(philo, data->forks, i);
-    }
-    
-}
-
-void	init(t_data *data)
+int create_philo(t_monitor **mtr)
 {
 	int i;
-	
-	i = -1;
-
-	data->end_sim = NULL;
-	data->philos = allocate(sizeof(t_philo) * data->philo_count);
-	data->forks = allocate(sizeof(t_fork) * data->philo_count);
-	while (++i < data->philo_count)
+	i = 0;
+	while (i < (*mtr)->philo_num)
 	{
-		handle_mutex(&data->forks[i].fork, INIT);
-		data->forks[i].fork_id = i;
+		if(pthread_create(&(*mtr)->philo[i]->th, NULL, &routine , (*mtr)->philo[i]))
+			return (-1);
+		i++;
 	}
-    init_philo(data);
+	if(pthread_create((*mtr)->thread_monitor, &monitoring , (*mtr)))
+		return (-1);
+	return (0);
+}
+
+int init_monitor(t_monitor **mtr, char **av)
+{
+	int philo_num;
+
+	(*mtr) = malloc(sizeof(t_monitor));
+	if(!mtr)
+		return (-1);
+	philo_num = ft_atoi(av[1]);
+	(*mtr)->philo = malloc(sizeof(t_philo *) * philo_num);
+	if(!(*mtr)->philo)
+		return (-1);
+	(*mtr)->philo_num = philo_num;
+	(*mtr)->forks = malloc(sizeof(pthread_mutex_t) * philo_num);
+	if(!(*mtr)->forks)
+		return (-1);
+	(*mtr)->philo_ready = 0;
+	return (0);
+}
+
+int init_mutexes(t_monitor **mtr)
+{
+	int i;
+
+	i = 0;
+	while(i < (*mtr)->philo_num)
+	{
+		if (pthread_mutex_init(&(*mtr)->forks[i++], NULL))
+			return (-1);
+	}
+	if (pthread_mutex_init(&(*mtr)->print_mutex, NULL))
+			return (-1);
+	if (pthread_mutex_init(&(*mtr)->last_meal_mutex, NULL))
+			return (-1);
+	if (pthread_mutex_init(&(*mtr)->num_eat_mutex, NULL))
+			return (-1);
+	return (0);
+}
+
+t_philo *setup_philo(t_philo *philo, char **av)
+{
+	struct timeval tv;
+
+	if (gettimeofday(&tv, NULL) == -1)
+		return (NULL);
+	philo = malloc(sizeof(t_philo));
+	if(!philo)
+		return (NULL);
+	philo->time_to_die = ft_atoi(av[2]);
+	philo->time_to_eat =ft_atoi(av[3]);
+	philo->time_to_sleep = ft_atoi(av[4]);
+	philo->start = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+	philo->last_meal = philo->start;
+	if (av[5])
+		philo->num_eat = ft_atoi(av[5]);
+	else
+		philo->num_eat = -1;
+	if (pthread_mutex_init(&philo->meal_mutex, NULL))
+		return (NULL);
+	return (philo);
+}
+
+int	init_philos(t_monitor **mtr, char **av)
+{
+	int 	i;
+	t_philo *philo;
+
+	i = 0;
+	while (i < (*mtr)->philo_num)
+	{
+		
+		philo = setup_philo((*mtr)->philo[i], av);
+		if(!philo)
+			return (-1);
+		(*mtr)->philo[i] = philo;
+		(*mtr)->philo[i]->id = i + 1;
+		(*mtr)->philo[i]->mtr = (*mtr);
+		i++;
+	}
+	return (0);
 }
