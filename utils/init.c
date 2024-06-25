@@ -6,7 +6,7 @@
 /*   By: yessemna <yessemna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 23:56:28 by yessemna          #+#    #+#             */
-/*   Updated: 2024/06/24 18:41:02 by yessemna         ###   ########.fr       */
+/*   Updated: 2024/06/24 23:09:33 by yessemna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int create_philo(t_monitor **mtr)
 			return (-1);
 		i++;
 	}
-	if(pthread_create((*mtr)->thread_monitor, &monitoring , (*mtr)))
+	if(pthread_create(&(*mtr)->thread_monitor, NULL, &monitoring , (*mtr)))
 		return (-1);
 	return (0);
 }

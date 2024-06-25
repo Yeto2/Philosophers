@@ -6,7 +6,7 @@
 /*   By: yessemna <yessemna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 01:32:15 by yessemna          #+#    #+#             */
-/*   Updated: 2024/06/24 18:38:02 by yessemna         ###   ########.fr       */
+/*   Updated: 2024/06/25 04:42:37 by yessemna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,14 @@ void ft_sleep(t_philo *philo);
 void ft_think(t_philo *philo);
 void ft_status(t_philo *philo, char *status);
 int create_philo(t_monitor **mtr);
+void handle_one_philo(t_philo *philo);
+int is_full(t_monitor *mtr);
 
 // routine
 void *routine(void *arg);
+void *monitoring(void *arg);
+
+// free
+void free_monitor(t_monitor *mtr);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: yessemna <yessemna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 01:32:19 by yessemna          #+#    #+#             */
-/*   Updated: 2024/06/24 18:35:58 by yessemna         ###   ########.fr       */
+/*   Updated: 2024/06/25 04:40:52 by yessemna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ int is_full(t_monitor *mtr)
 	int i;
 
 	i = 0;
-	
 	while (i < mtr->philo_num)
 	{
 		pthread_mutex_lock(&mtr->num_eat_mutex);
@@ -67,7 +66,7 @@ int join_threads(t_monitor **mtr)
 	{
 		while (i < (*mtr)->philo_num)
 		{
-			if(pthread_join((*mtr)->philo[i]->th,NULL))
+			if(pthread_detach((*mtr)->philo[i]->th))
 				return (-1);
 			i++;
 		}
@@ -80,8 +79,7 @@ int join_threads(t_monitor **mtr)
 int main(int ac, char *av[])
 {
 	t_monitor *mtr;
-	
-	(void)mtr;
+
     if (ac == 5 || ac == 6)
     {
 		// Parssing
@@ -95,9 +93,9 @@ int main(int ac, char *av[])
 			return(ft_putstr_fd("invalid arguments", 2), 1);
 		if (init_philos(&mtr, av))
 			return(ft_putstr_fd("invalid arguments", 2), 1);
-		
 		create_philo(&mtr);
 		join_threads(&mtr);
+		free_monitor(mtr);
     }else
         return(ft_putstr_fd("invalid arguments", 2), 1);
     return 0;
