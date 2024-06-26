@@ -6,7 +6,7 @@
 /*   By: yessemna <yessemna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 01:32:15 by yessemna          #+#    #+#             */
-/*   Updated: 2024/06/25 04:42:37 by yessemna         ###   ########.fr       */
+/*   Updated: 2024/06/26 21:20:31 by yessemna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <time.h>
 # include <sys/time.h>
 
-typedef struct s_monitor t_monitor;
+typedef struct s_monitor	t_monitor;
 
 typedef struct s_philo
 {
@@ -35,7 +35,7 @@ typedef struct s_philo
 	int				time_to_sleep;
 	size_t			last_meal;
 	int				num_eat;
-	t_monitor			*mtr;
+	t_monitor		*mtr;
 	int				must_eat_count;
 }					t_philo;
 
@@ -52,8 +52,7 @@ typedef struct s_monitor
 	int				stop_eat;
 	int				nbr_each_philo;
 	int				philo_ready;
-}   				t_monitor; 
-
+}					t_monitor;
 
 int		ft_atoi(const char *str);
 int		parsing(char *av[]);
@@ -69,19 +68,19 @@ size_t	ft_get_current_time(void);
 void	ft_usleep(size_t milliseconds);
 
 // actions
-void ft_eat(t_philo *philo);
-void ft_sleep(t_philo *philo);
-void ft_think(t_philo *philo);
-void ft_status(t_philo *philo, char *status);
-int create_philo(t_monitor **mtr);
-void handle_one_philo(t_philo *philo);
-int is_full(t_monitor *mtr);
+void	ft_eat(t_philo *philo);
+void	ft_sleep(t_philo *philo);
+void	ft_think(t_philo *philo);
+void	ft_status(t_philo *philo, char *status);
+int		create_philo(t_monitor **mtr);
+void	handle_one_philo(t_philo *philo);
+int		is_full(t_monitor *mtr);
 
 // routine
-void *routine(void *arg);
-void *monitoring(void *arg);
+void	*routine(void *arg);
+void	*monitoring(void *arg);
 
 // free
-void free_monitor(t_monitor *mtr);
+void	free_monitor(t_monitor *mtr);
 
 #endif

@@ -6,27 +6,15 @@
 /*   By: yessemna <yessemna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 01:32:19 by yessemna          #+#    #+#             */
-/*   Updated: 2024/06/25 04:40:52 by yessemna         ###   ########.fr       */
+/*   Updated: 2024/06/26 21:54:01 by yessemna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/*
-			5 800 200 200 7
-			
-			1   2  3   4  5
-				
-			->  5 — The number of philosophers
-			->  800 — The time a philosopher will die if he doesn’t eat
-			->  200 — The time it takes a philosopher to eat
-			->  200 — The time it takes a philosopher to sleep
-			->  7 — Number of times all the philosophers need to eat before terminating the program **
-*/
-
-int is_full(t_monitor *mtr)
+int	is_full(t_monitor *mtr)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < mtr->philo_num)
@@ -43,7 +31,7 @@ int is_full(t_monitor *mtr)
 	return (1);
 }
 
-void handle_one_philo(t_philo *philo)
+void	handle_one_philo(t_philo *philo)
 {
 	printf("%ld %d has taken a fork\n",
 		ft_get_current_time() - philo->start, philo->id);
@@ -52,51 +40,51 @@ void handle_one_philo(t_philo *philo)
 		ft_get_current_time() - philo->start, philo->id);
 }
 
-int join_threads(t_monitor **mtr)
+int	join_threads(t_monitor **mtr)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if ((*mtr)->philo_num == 1)
 	{
-		if(pthread_join((*mtr)->philo[i]->th,NULL))
+		if (pthread_join((*mtr)->philo[i]->th, NULL))
 			return (-1);
 	}
 	else
 	{
 		while (i < (*mtr)->philo_num)
 		{
-			if(pthread_detach((*mtr)->philo[i]->th))
+			if (pthread_detach((*mtr)->philo[i]->th))
 				return (-1);
 			i++;
 		}
 	}
-	if(pthread_join((*mtr)->thread_monitor,NULL))
-			return (-1);
+	if (pthread_join((*mtr)->thread_monitor, NULL))
+		return (-1);
 	return (0);
 }
 
-int main(int ac, char *av[])
+int	main(int ac, char *av[])
 {
-	t_monitor *mtr;
+	t_monitor	*mtr;
 
-    if (ac == 5 || ac == 6)
-    {
-		// Parssing
+	if (ac == 5 || ac == 6)
+	{
 		if (parsing(av))
-			return(ft_putstr_fd("invalid arguments", 2), 1);
-		if (ft_atoi(av[1] ) > 200)
-			return(ft_putstr_fd("invalid arguments", 2), 1);
+			return (ft_putstr_fd("invalid arguments", 2), 1);
+		if (ft_atoi(av[1]) > 200)
+			return (ft_putstr_fd("invalid arguments", 2), 1);
 		if (init_monitor(&mtr, av))
-			return(ft_putstr_fd("invalid arguments", 2), 1);
+			return (ft_putstr_fd("invalid arguments", 2), 1);
 		if (init_mutexes(&mtr))
-			return(ft_putstr_fd("invalid arguments", 2), 1);
+			return (ft_putstr_fd("invalid arguments", 2), 1);
 		if (init_philos(&mtr, av))
-			return(ft_putstr_fd("invalid arguments", 2), 1);
+			return (ft_putstr_fd("invalid arguments", 2), 1);
 		create_philo(&mtr);
 		join_threads(&mtr);
 		free_monitor(mtr);
-    }else
-        return(ft_putstr_fd("invalid arguments", 2), 1);
-    return 0;
+	}
+	else
+		return (ft_putstr_fd("invalid arguments", 2), 1);
+	return (0);
 }

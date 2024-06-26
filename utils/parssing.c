@@ -6,7 +6,7 @@
 /*   By: yessemna <yessemna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 00:42:40 by yessemna          #+#    #+#             */
-/*   Updated: 2024/06/25 04:42:07 by yessemna         ###   ########.fr       */
+/*   Updated: 2024/06/26 20:42:57 by yessemna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	parsing(char *av[])
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (av[i])
